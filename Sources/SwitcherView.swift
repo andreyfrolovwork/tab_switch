@@ -99,7 +99,7 @@ final class SwitcherView: NSView {
     }
 
     private func drawEmpty() {
-        let text = "Нет окон на этом экране" as NSString
+        let text = "No windows on this screen" as NSString
         let attributes: [NSAttributedString.Key: Any] = [
             .font: NSFont.systemFont(ofSize: 15, weight: .medium),
             .foregroundColor: NSColor.white.withAlphaComponent(0.9),
@@ -174,8 +174,8 @@ final class SwitcherView: NSView {
     private func drawFooter() {
         let text = (
             needsCapture
-                ? "превью нет: включи «Запись экрана» для WindowSwitcher"
-                : "отпустите Command — открыть     Tab — дальше     Esc — отмена"
+                ? "No previews: turn on Screen Recording for Tab Switch"
+                : "Release ⌘ to open     Tab next     Esc cancel"
         ) as NSString
         let rect = CGRect(x: 16, y: 10, width: bounds.width - 32, height: 16)
         text.draw(in: rect, withAttributes: [

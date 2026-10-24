@@ -45,7 +45,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func buildStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        if let image = NSImage(systemSymbolName: "square.stack.3d.up.fill", accessibilityDescription: "Окна") {
+        if let image = NSImage(systemSymbolName: "square.stack.3d.up.fill", accessibilityDescription: "Tab Switch") {
             image.isTemplate = true
             statusItem.button?.image = image
         } else {
@@ -53,17 +53,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         let menu = NSMenu()
-        let show = menu.addItem(withTitle: "Переключить окна", action: #selector(showSwitcher), keyEquivalent: "")
+        let show = menu.addItem(withTitle: "Switch Windows", action: #selector(showSwitcher), keyEquivalent: "")
         show.target = self
         menu.addItem(.separator())
-        accessItem = menu.addItem(withTitle: "Универсальный доступ", action: nil, keyEquivalent: "")
-        captureItem = menu.addItem(withTitle: "Запись экрана", action: nil, keyEquivalent: "")
-        let settings = menu.addItem(withTitle: "Открыть настройки доступа", action: #selector(openAccess), keyEquivalent: "")
+        accessItem = menu.addItem(withTitle: "Accessibility", action: nil, keyEquivalent: "")
+        captureItem = menu.addItem(withTitle: "Screen Recording", action: nil, keyEquivalent: "")
+        let settings = menu.addItem(withTitle: "Open Accessibility Settings…", action: #selector(openAccess), keyEquivalent: "")
         settings.target = self
-        let capture = menu.addItem(withTitle: "Открыть настройки записи экрана", action: #selector(openCapture), keyEquivalent: "")
+        let capture = menu.addItem(withTitle: "Open Screen Recording Settings…", action: #selector(openCapture), keyEquivalent: "")
         capture.target = self
         menu.addItem(.separator())
-        let quit = menu.addItem(withTitle: "Выйти", action: #selector(quit), keyEquivalent: "q")
+        let quit = menu.addItem(withTitle: "Quit Tab Switch", action: #selector(quit), keyEquivalent: "q")
         quit.target = self
         statusItem.menu = menu
     }
@@ -71,12 +71,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func refreshAccess() {
         let trusted = accessibilityTrusted(prompt: false)
         accessItem?.title = trusted
-            ? "Универсальный доступ включён"
-            : "Нужен универсальный доступ"
+            ? "Accessibility: on"
+            : "Accessibility needed for ⌘Tab"
         let capture = CGPreflightScreenCaptureAccess()
         captureItem?.title = capture
-            ? "Запись экрана включена"
-            : "Нужна запись экрана для превью"
+            ? "Screen Recording: on"
+            : "Screen Recording needed for previews"
         let captureNote = capture ? "capture on" : "capture off"
         if captureNote != lastCaptureNote {
             lastCaptureNote = captureNote
@@ -130,18 +130,18 @@ func askForMissingPermissions() {
     }
 
     var missing: [String] = []
-    if !trusted { missing.append("• Универсальный доступ — чтобы перехватывать ⌘Tab и переключать окна") }
-    if !capture { missing.append("• Запись экрана — чтобы показывать превью окон") }
+    if !trusted { missing.append("• Accessibility — to catch ⌘Tab and bring the chosen window forward") }
+    if !capture { missing.append("• Screen Recording — to show window previews") }
 
     NSApp.setActivationPolicy(.regular)
     NSApp.activate()
     let alert = NSAlert()
-    alert.messageText = "Переключателю окон нужны разрешения"
+    alert.messageText = "Tab Switch needs permissions"
     alert.informativeText = missing.joined(separator: "\n")
-        + "\n\nВключите WindowSwitcher в «Конфиденциальность и безопасность». "
-        + "Если его нет в списке, добавьте кнопкой «+»: \(Bundle.main.bundlePath)"
-    alert.addButton(withTitle: "Открыть настройки")
-    alert.addButton(withTitle: "Позже")
+        + "\n\nTurn on Tab Switch in System Settings → Privacy & Security. "
+        + "If it isn't listed, add it with the + button: \(Bundle.main.bundlePath)"
+    alert.addButton(withTitle: "Open Settings")
+    alert.addButton(withTitle: "Later")
     let answer = alert.runModal()
 
     guard answer == .alertFirstButtonReturn else {
