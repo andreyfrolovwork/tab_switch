@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 456" width="1000" height="456" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif">
+  <title>Memory footprint: Tab Switch about 51 MB, AltTab 500 to 600 MB</title>
+  <defs>
+    <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="7" height="7" fill="#cc6450" fill-opacity="0.18"/>
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#cc6450" stroke-width="2.5"/>
+    </pattern>
+    <radialGradient id="glow" cx="0.15" cy="0.1" r="0.8">
+      <stop offset="0" stop-color="#1f9a89" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#1f9a89" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- surface -->
+  <rect width="1000" height="456" rx="20" fill="#0d1b26"/>
+  <rect width="1000" height="456" rx="20" fill="url(#glow)"/>
+  <rect x="0.5" y="0.5" width="999" height="455" rx="19.5" fill="none" stroke="#ffffff" stroke-opacity="0.08"/>
+
+  <!-- headline -->
+  <text x="48" y="56" font-size="13" font-weight="600" letter-spacing="2" fill="#8fa3b3">MEMORY FOOTPRINT</text>
+  <text x="44" y="150" font-size="92" font-weight="800" fill="#ffffff" letter-spacing="-3">10×</text>
+  <rect x="50" y="164" width="140" height="4" rx="2" fill="#1f9a89"/>
+  <text x="222" y="116" font-size="28" font-weight="700" fill="#ffffff">less memory than AltTab</text>
+  <text x="222" y="146" font-size="15" fill="#a9b8c4">51 MB at idle versus 500–600 MB, on the same Mac</text>
+
+  <!-- grid -->
+  <g stroke="#ffffff" stroke-opacity="0.07">
+    <line x1="200" y1="196" x2="200" y2="356"/>
+    <line x1="310" y1="196" x2="310" y2="356"/>
+    <line x1="420" y1="196" x2="420" y2="356"/>
+    <line x1="530" y1="196" x2="530" y2="356"/>
+    <line x1="640" y1="196" x2="640" y2="356"/>
+    <line x1="750" y1="196" x2="750" y2="356"/>
+    <line x1="860" y1="196" x2="860" y2="356"/>
+  </g>
+  <g font-size="12" fill="#7d909f" text-anchor="middle">
+    <text x="200" y="378">0</text>
+    <text x="310" y="378">100</text>
+    <text x="420" y="378">200</text>
+    <text x="530" y="378">300</text>
+    <text x="640" y="378">400</text>
+    <text x="750" y="378">500</text>
+    <text x="860" y="378">600 MB</text>
+  </g>
+
+  <!-- AltTab -->
+  <text x="184" y="231" font-size="15" font-weight="600" fill="#ffffff" text-anchor="end">AltTab</text>
+  <text x="184" y="248" font-size="11.5" fill="#7d909f" text-anchor="end">reported range</text>
+  <rect x="200" y="212" width="550" height="36" rx="4" fill="#cc6450"/>
+  <rect x="752" y="212" width="108" height="36" rx="4" fill="url(#hatch)"/>
+  <text x="874" y="236" font-size="16" font-weight="700" fill="#ffffff">500–600 MB</text>
+
+  <!-- Tab Switch -->
+  <text x="184" y="311" font-size="15" font-weight="600" fill="#ffffff" text-anchor="end">Tab Switch</text>
+  <text x="184" y="328" font-size="11.5" fill="#7d909f" text-anchor="end">idle, previews cached</text>
+  <rect x="201" y="293" width="274" height="34" rx="4" fill="none" stroke="#1f9a89" stroke-opacity="0.75" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <rect x="200" y="292" width="56" height="36" rx="4" fill="#1f9a89"/>
+  <text x="268" y="316" font-size="16" font-weight="700" fill="#ffffff">51 MB</text>
+  <text x="488" y="309" font-size="12" fill="#a9b8c4">brief peak ≈ 250 MB</text>
+  <text x="488" y="325" font-size="12" fill="#7d909f">while capturing previews</text>
+
+  <!-- footnote -->
+  <text x="48" y="414" font-size="12" fill="#7d909f">Physical memory footprint on the author's Apple Silicon Mac, macOS 26. Tab Switch measured with footprint(1) after 13 minutes of use;</text>
+  <text x="48" y="432" font-size="12" fill="#7d909f">AltTab figure as observed in Activity Monitor on the same machine. Your numbers will vary with how many windows you have open.</text>
+</svg>

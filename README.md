@@ -25,6 +25,14 @@ Tab Switch shows each **window** on its own, with a live thumbnail, the app icon
 
 It's deliberately simple: one menu bar icon, one panel, no settings screen, no dependencies, about a thousand lines of Swift.
 
+## Light on memory
+
+A window switcher sits in the background all day, so it shouldn't eat your RAM. Tab Switch idles at about **51 MB**, roughly a tenth of what AltTab used on the same Mac.
+
+<p align="center">
+  <img src="docs/memory.svg" alt="Memory footprint: Tab Switch about 51 MB at idle, AltTab 500–600 MB on the same Mac" width="820">
+</p>
+
 ## Features
 
 - 🪟 **Every window, not every app.** All windows on the current Space, each with its own preview.
