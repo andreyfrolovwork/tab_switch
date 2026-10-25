@@ -64,6 +64,7 @@ final class SwitcherView: NSView {
     var selection = 0
     var layout = SwitcherLayout.make(count: 0, maxSize: CGSize(width: 800, height: 600))
     var onSelect: ((Int) -> Void)?
+    var onHover: ((Int) -> Void)?
     var needsCapture = false
     // Glass or blur behind the view already gives the backdrop; this is just a light tint over it.
     var backgroundAlpha: CGFloat = 0.94
@@ -88,6 +89,25 @@ final class SwitcherView: NSView {
             draw(item, at: layout.frame(for: index), selected: index == selection)
         }
         drawFooter()
+    }
+
+    override func updateTrackingAreas() {
+        super.updateTrackingAreas()
+        trackingAreas.forEach(removeTrackingArea)
+        // The panel never becomes key, so the area has to track even while inactive.
+        addTrackingArea(NSTrackingArea(
+            rect: .zero,
+            options: [.mouseMoved, .activeAlways, .inVisibleRect],
+            owner: self
+        ))
+    }
+
+    override func mouseMoved(with event: NSEvent) {
+        let point = convert(event.locationInWindow, from: nil)
+        guard let index = layout.index(at: point, count: items.count), index != selection else { return }
+        selection = index
+        needsDisplay = true
+        onHover?(index)
     }
 
     override func mouseUp(with event: NSEvent) {

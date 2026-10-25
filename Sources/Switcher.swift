@@ -41,6 +41,9 @@ final class Switcher {
             self?.selection = index
             self?.confirm()
         }
+        view.onHover = { [weak self] index in
+            self?.selection = index
+        }
     }
 
     /// Clear Liquid Glass on macOS 26: windows behind show through refracted, like under water.

@@ -48,6 +48,7 @@ A window switcher sits in the background all day, so it shouldn't eat your RAM. 
 | --- | --- |
 | **⌘Tab** / **⌥Tab** | Open the switcher |
 | **Tab** / **⇧Tab** or arrow keys | Move the selection (keep holding the modifier) |
+| Hover with the mouse | Select the window under the pointer |
 | Release **⌘** / **⌥** | Switch to the selected window |
 | **Return** or click | Switch to the selected window |
 | **Esc** | Close and stay where you were |
