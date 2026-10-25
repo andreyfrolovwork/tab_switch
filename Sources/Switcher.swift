@@ -156,7 +156,11 @@ final class Switcher {
         let mouse = NSEvent.mouseLocation
         let screen = NSScreen.screens.first { $0.frame.contains(mouse) } ?? NSScreen.main
         let visible = screen?.visibleFrame ?? NSRect(x: 0, y: 0, width: 1280, height: 800)
-        let maxSize = CGSize(width: visible.width - 48, height: visible.height * 0.72)
+        // Keep clear space on both sides; extra windows wrap into more rows instead.
+        let maxSize = CGSize(
+            width: min(visible.width * 0.72, visible.width - 96),
+            height: visible.height * 0.82
+        )
         let layout = SwitcherLayout.make(count: items.count, maxSize: maxSize)
         view.layout = layout
         let origin = CGPoint(
