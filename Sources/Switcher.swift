@@ -77,7 +77,8 @@ final class Switcher {
 
     func open(forward: Bool, gesture: SwitcherGesture) {
         generation += 1
-        items = WindowLister.onScreenWindows()
+        let stacked = WindowLister.onScreenWindows()
+        items = WindowLister.groupedByApp(stacked)
         for index in items.indices {
             items[index].thumbnail = ThumbnailCache.image(for: items[index].id)
         }
@@ -88,7 +89,8 @@ final class Switcher {
         } else if items.count == 1 {
             selection = 0
         } else {
-            selection = 1
+            // First Tab still goes back to the window used before the current one.
+            selection = items.firstIndex { $0.id == stacked[1].id } ?? 1
         }
         self.gesture = gesture
         isShown = true

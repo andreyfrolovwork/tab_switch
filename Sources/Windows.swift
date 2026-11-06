@@ -59,15 +59,16 @@ enum WindowLister {
             guard let boundsDict = info[kCGWindowBounds as String] as? NSDictionary,
                   let bounds = CGRect(dictionaryRepresentation: boundsDict) else { continue }
             if bounds.width < 80 || bounds.height < 48 { continue }
-            let stack = "\(pid):\(Int(bounds.minX)):\(Int(bounds.minY)):\(Int(bounds.width)):\(Int(bounds.height))"
-            if seenStacks.contains(stack) { continue }
-            seenStacks.insert(stack)
 
             let windowID = CGWindowID((info[kCGWindowNumber as String] as? NSNumber)?.uint32Value ?? 0)
             if windowID == 0 { continue }
 
             let cgTitle = (info[kCGWindowName as String] as? String)?
                 .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            // Maximized windows of one app share a frame, so the title tells them apart.
+            let stack = "\(pid):\(Int(bounds.minX)):\(Int(bounds.minY)):\(Int(bounds.width)):\(Int(bounds.height)):\(cgTitle)"
+            if seenStacks.contains(stack) { continue }
+            seenStacks.insert(stack)
             let app = NSRunningApplication(processIdentifier: pid)
             let icon = app?.icon ?? NSWorkspace.shared.icon(for: .applicationBundle)
 
@@ -82,6 +83,18 @@ enum WindowLister {
             ))
         }
         return items
+    }
+
+    /// Puts each app's windows next to each other. Apps keep the order of their frontmost window,
+    /// and windows inside an app keep their stacking order.
+    static func groupedByApp(_ items: [WindowItem]) -> [WindowItem] {
+        var order: [pid_t] = []
+        var groups: [pid_t: [WindowItem]] = [:]
+        for item in items {
+            if groups[item.pid] == nil { order.append(item.pid) }
+            groups[item.pid, default: []].append(item)
+        }
+        return order.flatMap { groups[$0] ?? [] }
     }
 
     /// Fills empty titles from Accessibility. Geometry matches a Quartz window to an AX window.
@@ -158,16 +171,30 @@ private func axWindows(_ application: AXUIElement) -> [AXUIElement] {
     return raw as? [AXUIElement] ?? []
 }
 
+@_silgen_name("_AXUIElementGetWindow")
+private func _AXUIElementGetWindow(_ element: AXUIElement, _ id: UnsafeMutablePointer<CGWindowID>) -> AXError
+
+private func axWindowID(_ element: AXUIElement) -> CGWindowID? {
+    var id: CGWindowID = 0
+    guard _AXUIElementGetWindow(element, &id) == .success, id != 0 else { return nil }
+    return id
+}
+
 private func bestMatch(in windows: [AXUIElement], for item: WindowItem, primaryHeight: CGFloat) -> AXUIElement? {
+    // Maximized windows of one app share a frame, so geometry alone picks the wrong one.
+    if let exact = windows.first(where: { axWindowID($0) == item.id }) {
+        return exact
+    }
     let target = cocoaRect(fromQuartz: item.cgBounds, primaryHeight: primaryHeight)
     var best: (element: AXUIElement, score: CGFloat)?
     for window in windows {
         guard let frame = axFrame(window) else { continue }
-        let score = abs(frame.midX - target.midX)
+        var score = abs(frame.midX - target.midX)
             + abs(frame.midY - target.midY)
             + abs(frame.width - target.width)
             + abs(frame.height - target.height)
         if score > 120 { continue }
+        if item.showsTitle, axString(window, kAXTitleAttribute) != item.title { score += 60 }
         if best == nil || score < best!.score {
             best = (window, score)
         }
